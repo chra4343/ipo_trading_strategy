@@ -45,6 +45,13 @@ The scanner identifies **6 different signal types** across multiple timeframes:
 - Returns sentiment: `Positive | Negative | Mixed | Neutral`
 - Provides one-line news summary
 
+#### 7️⃣ **Telegram Report Delivery** 🚀 *NEW*
+- Automatically sends CSV report to your Telegram account after scan completes
+- Summary message with signal breakdown
+- CSV file attachment with all details
+- Works with personal chat or group chat
+- Requires `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` environment variables
+
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -72,7 +79,20 @@ pip install yfinance pandas requests anthropic
 
    Get your API key from: https://console.anthropic.com/
 
-3. **Run the scanner:**
+3. **Set up Telegram** (optional, for auto-report delivery):
+   ```bash
+   # macOS / Linux:
+   export TELEGRAM_BOT_TOKEN=your_bot_token
+   export TELEGRAM_CHAT_ID=your_chat_id
+   
+   # Windows:
+   set TELEGRAM_BOT_TOKEN=your_bot_token
+   set TELEGRAM_CHAT_ID=your_chat_id
+   ```
+   
+   📖 **See `TELEGRAM_SETUP.md`** for detailed Telegram configuration guide
+
+4. **Run the scanner:**
    ```bash
    python nse_ipo_breakout_scanner_v2.py
    ```
@@ -195,6 +215,16 @@ PRINT_FAILURES       = False  # Set True to debug why stocks are skipped
 - Location: Current working directory
 - Use in spreadsheet apps or further analysis
 
+### Telegram Report ⭐ NEW
+- **Automatic delivery** after scan completes (if signals found)
+- **Summary message** with:
+  - Total signals count
+  - Breakdown by signal type
+  - Generation timestamp
+- **CSV attachment** with complete data
+- **Requires:** `TELEGRAM_BOT_TOKEN` and `TELEGRAM_CHAT_ID` set
+- See `TELEGRAM_SETUP.md` for setup instructions
+
 ## 🔧 How It Works
 
 ### Phase 1: Download NSE Data
@@ -225,6 +255,12 @@ PRINT_FAILURES       = False  # Set True to debug why stocks are skipped
 1. Displays organized tables by signal type
 2. Shows news sentiment summary
 3. Exports signals to CSV with timestamp
+
+### Phase 6: Telegram Delivery ⭐ NEW
+1. If signals are found and Telegram credentials are set
+2. Sends summary message to configured Telegram chat
+3. Uploads CSV file as attachment
+4. Completes with success/failure status
 
 ## 🛡️ Filters & Risk Controls
 

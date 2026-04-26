@@ -1,0 +1,345 @@
+╔══════════════════════════════════════════════════════════════════════════╗
+║     NSE IPO BREAKOUT SCANNER - TELEGRAM INTEGRATION - FILE MANIFEST     ║
+║     Release Date: 26 April 2026 | Version: 2.1                          ║
+╚══════════════════════════════════════════════════════════════════════════╝
+
+PROJECT STRUCTURE:
+═════════════════════════════════════════════════════════════════════════
+
+ipo_trading_strategy/
+│
+├─ 📄 CORE APPLICATION FILES
+│  ├─ nse_ipo_breakout_scanner_v2.py (Modified ⭐)
+│  │  └─ Main scanner with Telegram integration
+│  │     • Added Telegram configuration
+│  │     • Added send_to_telegram() function
+│  │     • Modified run_scanner() for auto-sending
+│  │     └─ ~80 lines added for Telegram
+│  │
+│  ├─ setup.py (New ⭐)
+│  │  └─ Interactive setup wizard
+│  │     • Checks Python version
+│  │     • Installs dependencies
+│  │     • Guides Telegram setup
+│  │     • Saves .env file
+│  │
+│  └─ requirements.txt (New ⭐)
+│     └─ Python package dependencies
+│        • yfinance
+│        • pandas
+│        • requests
+│        • anthropic
+│
+├─ 📖 DOCUMENTATION (6 FILES)
+│  ├─ START_HERE.md (New ⭐ - READ THIS FIRST!)
+│  │  └─ Complete summary with next steps
+│  │     • What was done
+│  │     • How to get started
+│  │     • Quick troubleshooting
+│  │
+│  ├─ README.md (Updated ⭐)
+│  │  └─ Full feature documentation
+│  │     • Added Telegram section
+│  │     • Updated quick start
+│  │     • Phase 6 explanation
+│  │
+│  ├─ INSTALLATION_GUIDE.md (New ⭐)
+│  │  └─ Complete setup walkthrough
+│  │     • 5-minute quick start
+│  │     • Step-by-step guide
+│  │     • Troubleshooting (detailed)
+│  │     • Workflows & examples
+│  │     • FAQ section
+│  │
+│  ├─ TELEGRAM_SETUP.md (New ⭐)
+│  │  └─ Detailed Telegram configuration
+│  │     • Get bot token (step-by-step)
+│  │     • Get chat ID (step-by-step)
+│  │     • Environment setup (all platforms)
+│  │     • Permanent configuration
+│  │     • Verification & testing
+│  │     • 15+ troubleshooting scenarios
+│  │
+│  ├─ FEATURE_SUMMARY.md (New ⭐)
+│  │  └─ Feature overview & changes
+│  │     • What's new
+│  │     • Code changes
+│  │     • Usage examples
+│  │     • Testing checklist
+│  │
+│  ├─ CHANGES.md (New ⭐)
+│  │  └─ Detailed change log
+│  │     • Line-by-line modifications
+│  │     • New functions
+│  │     • Configuration options
+│  │     • Statistics & metrics
+│  │     • Future enhancements
+│  │
+│  ├─ QUICK_START.sh (New ⭐)
+│  │  └─ Quick reference card
+│  │     • Common commands
+│  │     • Quick troubleshooting
+│  │     • Tips & tricks
+│  │
+│  └─ FILE_MANIFEST.txt (This file)
+│     └─ Complete file listing & descriptions
+│
+└─ 📦 OTHER FILES
+   ├─ LICENSE
+   │  └─ License information
+   │
+   └─ .env (Created by setup.py)
+      └─ Environment variables (user credentials)
+         ⚠️  Not included in git (add to .gitignore)
+
+═════════════════════════════════════════════════════════════════════════
+
+FILE DESCRIPTIONS:
+
+🟢 MUST READ FIRST:
+────────────────────
+1. START_HERE.md
+   • Complete summary of what was done
+   • 3-step quick start guide
+   • What to expect
+   • Read this first to understand everything!
+
+🟡 SETUP & INSTALLATION:
+────────────────────────
+1. INSTALLATION_GUIDE.md
+   • Complete setup walkthrough
+   • Option A: Interactive (run setup.py)
+   • Option B: Manual
+   • Verification & testing
+   • Troubleshooting guide
+   ✓ Use this for setup instructions
+
+2. TELEGRAM_SETUP.md
+   • Step-by-step Telegram configuration
+   • Get bot token from @BotFather
+   • Get chat ID from @userinfobot
+   • Platform-specific instructions
+   • Make it permanent
+   ✓ Use this for Telegram-specific help
+
+3. setup.py
+   • Interactive setup wizard
+   • Installs dependencies
+   • Guides through Telegram setup
+   • Creates .env file
+   ✓ Run this: python setup.py
+
+🔵 REFERENCE & INFO:
+───────────────────
+1. README.md
+   • Full feature documentation
+   • All signal types explained
+   • Configuration options
+   • Data sources
+   ✓ Reference for features
+
+2. FEATURE_SUMMARY.md
+   • What's new overview
+   • Code changes summary
+   • Usage examples
+   ✓ Quick overview of changes
+
+3. CHANGES.md
+   • Detailed change log
+   • Line-by-line modifications
+   • New functions added
+   • Removed duplicates
+   ✓ Technical reference
+
+4. QUICK_START.sh
+   • Quick reference commands
+   • Common use cases
+   • Tips & tricks
+   ✓ Quick lookup
+
+5. FILE_MANIFEST.txt
+   • This file
+   • Complete file listing
+   ✓ Project overview
+
+═════════════════════════════════════════════════════════════════════════
+
+QUICK START STEPS:
+══════════════════
+
+Step 1: Read Documentation
+  └─ START_HERE.md  ← Start here!
+
+Step 2: Run Setup
+  └─ python setup.py
+     • Installs dependencies
+     • Guides Telegram setup
+     • Creates .env
+
+Step 3: First Run
+  └─ python nse_ipo_breakout_scanner_v2.py
+     • Scans stocks
+     • Sends to Telegram
+     • Creates CSV
+
+Step 4: Check Telegram
+  └─ Look for 2 messages:
+     • Message 1: Summary
+     • Message 2: CSV file
+
+═════════════════════════════════════════════════════════════════════════
+
+KEY MODIFICATIONS:
+══════════════════
+
+nse_ipo_breakout_scanner_v2.py:
+  • Lines 47-56:   Added Telegram docs to requirements
+  • Lines 107-112: Added Telegram configuration
+  • Lines 630-698: Added send_to_telegram() function
+  • Lines 856-864: Modified run_scanner() to call Telegram
+
+Total additions: ~80 lines
+Total new functions: 1
+Configuration options added: 3
+
+═════════════════════════════════════════════════════════════════════════
+
+WHAT YOU'LL GET:
+════════════════
+
+After running the scanner:
+
+Local Files:
+  • ipo_signals_YYYYMMDD_HHMM.csv  (CSV report)
+  • .env                           (if created by setup.py)
+
+On Telegram:
+  • Message 1: Summary with signal breakdown
+  • Message 2: CSV file as attachment
+
+Console Output:
+  • Scan progress in real-time
+  • ✅ "Report sent to Telegram successfully!"
+  • ✅ "Scan complete!"
+
+═════════════════════════════════════════════════════════════════════════
+
+TROUBLESHOOTING QUICK LINKS:
+═══════════════════════════
+
+Telegram Setup Issues?
+  → See: TELEGRAM_SETUP.md (Troubleshooting section)
+
+Installation Problems?
+  → See: INSTALLATION_GUIDE.md (Troubleshooting section)
+
+General Questions?
+  → See: START_HERE.md or README.md
+
+Specific Features?
+  → See: FEATURE_SUMMARY.md or README.md
+
+Need to Review Changes?
+  → See: CHANGES.md or FILE_MANIFEST.txt
+
+═════════════════════════════════════════════════════════════════════════
+
+DEPENDENCIES:
+══════════════
+
+Python Packages:
+  • yfinance >= 0.2.20
+  • pandas >= 1.5.0
+  • requests >= 2.28.0
+  • anthropic >= 0.7.0
+
+External Services:
+  • Telegram Bot API (free)
+  • NSE Equity List (free)
+  • Yahoo Finance (free)
+  • Anthropic Claude API (paid, but has free tier)
+
+═════════════════════════════════════════════════════════════════════════
+
+VERSION INFO:
+══════════════
+
+Version:        2.1
+Release Date:   26 April 2026
+Status:         ✅ Complete & Ready to Use
+Python:         3.8+
+Platform:       Windows / macOS / Linux
+Telegram:       +91 8328139169 (reference)
+
+═════════════════════════════════════════════════════════════════════════
+
+NEXT STEPS:
+════════════
+
+Immediate (5 min):
+  1. Read START_HERE.md
+  2. Run: python setup.py
+  3. Enter Telegram credentials
+  4. Run: python nse_ipo_breakout_scanner_v2.py
+
+Getting Started (10 min):
+  1. Follow INSTALLATION_GUIDE.md
+  2. Configure environment variables
+  3. First scan & verify Telegram delivery
+
+Advanced (Optional):
+  1. Schedule daily runs with cron/Task Scheduler
+  2. Customize message formatting
+  3. Send to multiple groups
+  4. Extend with additional signals
+
+═════════════════════════════════════════════════════════════════════════
+
+SUPPORT & HELP:
+════════════════
+
+For Setup Help:
+  → Read INSTALLATION_GUIDE.md first
+  → Then TELEGRAM_SETUP.md if Telegram-specific
+
+For Feature Questions:
+  → Check README.md (Features section)
+  → Or FEATURE_SUMMARY.md (What's new)
+
+For Troubleshooting:
+  → Check respective guide's troubleshooting section
+  → See START_HERE.md (Quick troubleshooting table)
+
+═════════════════════════════════════════════════════════════════════════
+
+FILE SIZES:
+═════════════
+
+nse_ipo_breakout_scanner_v2.py   ~38 KB  (main app)
+setup.py                          ~8 KB   (setup wizard)
+README.md                         ~12 KB  (documentation)
+INSTALLATION_GUIDE.md             ~8 KB   (setup guide)
+TELEGRAM_SETUP.md                 ~6 KB   (Telegram guide)
+FEATURE_SUMMARY.md                ~4 KB   (what's new)
+CHANGES.md                         ~7 KB   (change log)
+QUICK_START.sh                     ~7 KB   (quick ref)
+START_HERE.md                      ~8 KB   (summary)
+FILE_MANIFEST.txt                 This file
+
+Total Documentation:             ~62 KB
+Total Project:                   ~100 KB
+
+═════════════════════════════════════════════════════════════════════════
+
+READY TO USE! 🚀
+
+Start with: START_HERE.md
+Questions? See: INSTALLATION_GUIDE.md
+Run it: python setup.py
+Then: python nse_ipo_breakout_scanner_v2.py
+
+Happy Trading! 📈
+
+═════════════════════════════════════════════════════════════════════════
+Generated: 26 April 2026 | Status: ✅ Complete & Ready
+═════════════════════════════════════════════════════════════════════════

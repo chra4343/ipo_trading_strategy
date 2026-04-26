@@ -50,6 +50,12 @@ Run:
         Windows : set ANTHROPIC_API_KEY=sk-ant-...
         Mac/Linux: export ANTHROPIC_API_KEY=sk-ant-...
 
+    Set your Telegram Bot Token and Chat ID:
+        Windows : set TELEGRAM_BOT_TOKEN=your_bot_token
+                  set TELEGRAM_CHAT_ID=your_chat_id
+        Mac/Linux: export TELEGRAM_BOT_TOKEN=your_bot_token
+                   export TELEGRAM_CHAT_ID=your_chat_id
+
     Then:
         python nse_ipo_breakout_scanner.py
 """
@@ -96,6 +102,14 @@ NEWS_LOOKBACK_DAYS = 10    # how many days back to search for news
 NEWS_DELAY         = 2.0   # pause between Anthropic API calls (seconds)
 ANTHROPIC_MODEL    = "claude-sonnet-4-20250514"
 ANTHROPIC_API_URL  = "https://api.anthropic.com/v1/messages"
+
+# ── Telegram Bot Configuration ⭐ NEW ───────────────────────
+TELEGRAM_BOT_TOKEN = '8601720985:AAF4Lia2qJX9ozfiIXysX1amKzhNxwZzsS8'#os.environ.get("TELEGRAM_BOT_TOKEN", "").strip()
+TELEGRAM_CHAT_ID   = '5038750979'  #os.environ.get("TELEGRAM_CHAT_ID", "").strip()
+# Your Telegram phone number for reference: +91 8328139169
+# To set up: Get bot token from @BotFather on Telegram
+#            Get chat ID from @userinfobot on Telegram
+TELEGRAM_SEND_REPORT = True  # Set False to disable Telegram sending
 
 
 # ──────────────────────────────────────────────────────────────
@@ -608,6 +622,74 @@ SENTIMENT_EMOJI = {
     "N/A":      "❓",
 }
 
+
+# ──────────────────────────────────────────────────────────────
+#  STEP 6a: TELEGRAM NOTIFICATION ⭐ NEW ⭐
+# ──────────────────────────────────────────────────────────────
+
+def send_to_telegram(csv_file: str, signal_summary: dict) -> bool:
+    """
+    Send the CSV report to Telegram via bot.
+    Returns True if successful, False otherwise.
+    """
+    if not TELEGRAM_SEND_REPORT or not TELEGRAM_BOT_TOKEN or not TELEGRAM_CHAT_ID:
+        if TELEGRAM_SEND_REPORT:
+            print("\n  ⚠  Telegram: BOT_TOKEN or CHAT_ID not set. Skipping telegram send.")
+        return False
+
+    try:
+        # ── Send summary message ─────────────────────────────────
+        summary_msg = (
+            f"🚀 <b>NSE IPO Breakout Signals Report</b>\n\n"
+            f"📅 Generated: {datetime.today().strftime('%d %b %Y %I:%M %p')}\n\n"
+            f"📊 <b>Signal Summary:</b>\n"
+            f"  • Total Signals: {signal_summary['total']}\n"
+            f"  • 1st Breakouts: {signal_summary['breakouts']}\n"
+            f"  • Retest + Hammer: {signal_summary['retests']}\n"
+            f"  • Near Breakout: {signal_summary['near']}\n"
+            f"  • Retracing: {signal_summary['retracing']}\n\n"
+            f"📎 CSV file attached below."
+        )
+
+        send_msg_url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendMessage"
+        send_msg_data = {
+            "chat_id": TELEGRAM_CHAT_ID,
+            "text": summary_msg,
+            "parse_mode": "HTML",
+        }
+
+        resp = requests.post(send_msg_url, json=send_msg_data, timeout=30)
+        if resp.status_code != 200:
+            print(f"  ❌ Telegram message failed: {resp.status_code} {resp.text}")
+            return False
+
+        # ── Send CSV file ────────────────────────────────────────
+        send_doc_url = f"https://api.telegram.org/bot{TELEGRAM_BOT_TOKEN}/sendDocument"
+        
+        with open(csv_file, "rb") as f:
+            files = {"document": (csv_file, f)}
+            data = {
+                "chat_id": TELEGRAM_CHAT_ID,
+                "caption": f"📊 IPO Signals Report\n{datetime.today().strftime('%d %b %Y')}",
+                "parse_mode": "HTML",
+            }
+            resp = requests.post(send_doc_url, data=data, files=files, timeout=60)
+
+        if resp.status_code == 200:
+            print(f"\n  ✅ Report sent to Telegram successfully!")
+            return True
+        else:
+            print(f"  ❌ Telegram file upload failed: {resp.status_code} {resp.text}")
+            return False
+
+    except requests.exceptions.RequestException as e:
+        print(f"  ❌ Telegram request error: {e}")
+        return False
+    except Exception as e:
+        print(f"  ❌ Error sending to Telegram: {e}")
+        return False
+
+
 def run_scanner():
     print("=" * 65)
     print("   NSE MAINBOARD IPO BREAKOUT SCANNER")
@@ -766,6 +848,19 @@ def run_scanner():
     csv_file = f"ipo_signals_{datetime.today().strftime('%Y%m%d_%H%M')}.csv"
     result_df.to_csv(csv_file, index=False)
     print(f"\nSaved to: {csv_file}\n")
+
+    # ── Send to Telegram ──────────────────────────────────────
+    if signals:  # Only send if there are signals
+        signal_summary = {
+            "total": len(signals),
+            "breakouts": len(first_bo),
+            "retests": len(retests),
+            "near": len(near_bo),
+            "retracing": len(retracing),
+        }
+        send_to_telegram(csv_file, signal_summary)
+    
+    print("✅ Scan complete!\n")
 
 
 if __name__ == "__main__":
