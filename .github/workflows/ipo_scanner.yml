@@ -1,0 +1,53 @@
+name: NSE IPO Breakout Scanner
+
+# Trigger: Every day at 9:00 AM IST (3:30 AM UTC)
+# Also allow manual trigger from GitHub UI
+on:
+  schedule:
+    - cron: '30 3 * * *'  # 9:00 AM IST = 3:30 AM UTC
+  
+  workflow_dispatch:  # Allow manual trigger
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install yfinance pandas requests anthropic
+      
+      - name: Run IPO Scanner
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          python nse_ipo_breakout_scanner_v2.py
+      
+      - name: Upload CSV to artifacts
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: ipo_signals
+          path: ipo_signals_*.csv
+          retention-days: 30
+      
+      - name: Upload logs
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: scan_logs
+          path: nohup.out
+          retention-days: 7
